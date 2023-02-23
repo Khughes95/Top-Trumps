@@ -1,0 +1,206 @@
+import random
+
+import requests
+
+# EXTENTION TASK - ADD PLAYER NAME
+print('\nHello, are you ready to play Pokemom top trumps?')
+player = input('Please enter your name : ')
+
+
+def random_pokemon():
+    '''
+    REQUIRED TASK - RANDOMLY SELECT A POKEMON BETWEEN 1 AND 151
+    REQUIRED TASK - USE POKEMON API TO GENERATE A POKEMON
+    EXTENTION TASK - Use different stats for the Pokemon from the API
+    :return:
+    POKEMONS NAME
+    POKEMONS ID
+    POKEMONS HEIGHT
+    POKEMONS WEIGHT
+    POKEMONS ORDER
+    POKEMONS EXPERIENCE
+    '''
+
+    pokemon_number = random.randint(1, 151)
+    url = 'https://pokeapi.co/api/v2/pokemon/{}/'.format(pokemon_number)
+    response = requests.get(url)
+    pokemon = response.json()
+
+    return {
+        'name': pokemon['name'],
+        'id': pokemon['id'],
+        'height': pokemon['height'],
+        'weight': pokemon['weight'],
+        'order': pokemon['order'],
+        'experience': pokemon['base_experience']
+    }
+
+
+random_pokemon()
+
+
+def random_stat():
+    '''
+    EXTENTION TASK - Allow the opponent (computer) to choose a stat that they would like to compare
+    randomly select a number between 1-5 to select a stat
+    :return:
+    a number between 1-5 which selects a stat
+    '''
+    random_stat = random.randint(1, 5)
+
+    if random_stat == 1:
+        random_stat = 'id'
+    elif random_stat == 2:
+        random_stat = 'height'
+    elif random_stat == 3:
+        random_stat = 'weight'
+    elif random_stat == 4:
+        random_stat = 'order'
+    elif random_stat == 5:
+        random_stat = 'experience'
+
+    return random_stat
+
+
+random_stat()
+
+
+def run():
+    '''
+    player and opponent scores begin at 0
+    REQUIRED TASK - Get a random Pokemon for the player and another for their opponent
+    EXTENTION TASK - Get multiple random Pokemon and let the player decide which one that they want to use
+    EXTENTION TASK - Ask the user which stat they want to use
+    EXTENTION TASK - Allow the opponent (computer) to choose a stat that they would like to compare
+    REQUIRED TASK - Compare the player's and opponent's Pokemon on the chosen stat to decide who wins
+    EXTENTION TASK - Record high scores for players and store them in a file
+    '''
+    player_score = 0
+    opponent_score = 0
+
+    pokemon_1 = random_pokemon()
+    pokemon_2 = random_pokemon()
+    pokemon_3 = random_pokemon()
+
+    print('\nPokemon 1 - {} - ID: {}    weight: {}    height: {}    '
+          'order: {}    experience: {}'.format(pokemon_1['name'], pokemon_1['id'], pokemon_1['weight'],
+                                               pokemon_1['height'], pokemon_1['order'], pokemon_1['experience']))
+    print('Pokemon 2 - {} - ID: {}    weight: {}    height: {}    '
+          'order: {}    experience: {}'.format(pokemon_2['name'], pokemon_2['id'], pokemon_2['weight'],
+                                               pokemon_2['height'], pokemon_2['order'], pokemon_2['experience']))
+    print('Pokemon 3 - {} - ID: {}    weight: {}    height: {}    '
+          'order: {}    experience: {}\n ______________________________________________________________________'
+          .format(pokemon_3['name'], pokemon_3['id'], pokemon_3['weight'], pokemon_3['height'], pokemon_3['order'],
+                  pokemon_3['experience']))
+
+    player_choice = input('\nChoose a pokemon to battle - {}, {} or {} : \n'.format(pokemon_1['name'], pokemon_2['name']
+                                                                                    , pokemon_3['name']))
+
+    if player_choice == pokemon_1['name']:
+        player_pokemon = pokemon_1
+        print('\n{} have chosen to battle {}.'.format(player, pokemon_1))
+    elif player_choice == pokemon_2['name']:
+        player_pokemon = pokemon_2
+        print('\n{} have chosen to battle {}.'.format(player, pokemon_2))
+    elif player_choice == pokemon_3['name']:
+        player_pokemon = pokemon_3
+        print('{} have chosen to battle {}.'.format(player, pokemon_3))
+
+    stat_choice = input('\nWhich stat do you want to use? (id, height, weight, order, experience) ')
+
+    # show player the opponents pokemon
+    opponent_pokemon = random_pokemon()
+    print('\nThe opponent chose {}'.format(opponent_pokemon['name']))
+
+    player_stat = player_pokemon[stat_choice]
+    opponent_stat = opponent_pokemon[stat_choice]
+
+    if player_stat > opponent_stat:
+        print('\n{}\'s {} was {} and your opponents was {} therefore..You Win!'.format(player, stat_choice, player_stat,
+                                                                                opponent_stat))
+        player_score = player_score + 1
+    elif player_stat < opponent_stat:
+        print('\n{}\'s {} was {} and your opponents was {} therefore...You Lose!'.format(player, stat_choice,
+                                                        player_stat, opponent_stat))
+        opponent_score = opponent_score + 1
+    else:
+        print('\nDraw!')
+
+    print('\nAfter that round {}\'s score is : {} \nopponents score is : {}\n____________________________OPPONENTS_____'
+          '________ROUND________________________\n'.format(player, player_score, opponent_score))
+
+    opponent_pokemon = random_pokemon()
+    print('The opponent chose {}\n'.format(opponent_pokemon['name']))
+
+    pokemon_1 = random_pokemon()
+    pokemon_2 = random_pokemon()
+    pokemon_3 = random_pokemon()
+
+    print('Pokemon 1 - {} - ID: {}    weight: {}    height: {}    order: {}    experience: {}'.format(pokemon_1['name'],
+                pokemon_1['id'], pokemon_1['weight'], pokemon_1['height'], pokemon_1['order'], pokemon_1['experience']))
+    print('Pokemon 2 - {} - ID: {}    weight: {}    height: {}    order: {}    experience: {}'.format(pokemon_2['name'],
+                pokemon_2['id'], pokemon_2['weight'], pokemon_2['height'], pokemon_2['order'], pokemon_2['experience']))
+    print('Pokemon 3 - {} - ID: {}    weight: {}    height: {}    order: {}    experience: {}'.format(pokemon_3['name'],
+                pokemon_3['id'], pokemon_3['weight'], pokemon_3['height'], pokemon_3['order'], pokemon_3['experience']))
+
+    player_choice = input('\nChoose a pokemon to battle - {}, {} or {} : \n'.format(pokemon_1['name'], pokemon_2['name'],
+                                                                                    pokemon_3['name']))
+
+    if player_choice == pokemon_1['name']:
+        player_pokemon = pokemon_1
+        print('\n{} has chosen to battle {}.'.format(player, pokemon_1))
+    elif player_choice == pokemon_2['name']:
+        player_pokemon = pokemon_2
+        print('\n{} has chosen to battle {}.'.format(player, pokemon_2))
+    elif player_choice == pokemon_3['name']:
+        player_pokemon = pokemon_3
+        print('{} have chosen to battle {}.'.format(player, pokemon_3))
+
+    random_pokemon()
+
+    opponent_stat_choice = random_stat()
+    print('\nThe opponent chose {}'.format(opponent_stat_choice))
+
+    player_stat = player_pokemon[opponent_stat_choice]
+    opponent_stat = opponent_pokemon[opponent_stat_choice]
+
+    if player_stat > opponent_stat:
+        print('\n{}\'s {} was {} and your opponents was {} therefore..You Win!'.format(player, opponent_stat_choice,
+                                                                                       player_stat, opponent_stat))
+        player_score = player_score + 1
+    elif player_stat < opponent_stat:
+         print('\n{}\'s {} was {} and your opponents was {} therefore...You Lose!'.format(player, opponent_stat_choice,
+                                                                                          player_stat, opponent_stat))
+         opponent_score = opponent_score + 1
+    else:
+        print('\nDraw!')
+
+    print('\nAfter that round {}\'s score is : {} \nopponents score is : {}\n'.format(player, player_score,
+                                                                                      opponent_score))
+
+    with open('pokemon.txt', 'w+') as pokemon_score:
+        pokemon_score.read()
+        scores = ("PLAYER SCORE - {} OPPONENT SCORE - {}".format(player_score, opponent_score))
+        pokemon_score.write(scores + '\n')
+
+    with open('pokemon.txt', 'r') as pokemon_score:
+        pokemon_score.read()
+
+
+run()
+
+
+def play_again():
+    '''
+    EXTENTION TASK - Play multiple rounds and record the outcome of each round. The player with most number
+of rounds won, wins the game
+    '''
+    play_again = input('Would you like to play again? yes/no  ')
+    print('\n')
+    if play_again == 'yes':
+        print('\n_________________ NEW ___________________ROUND___________')
+        run()
+    elif play_again == 'no':
+        print('\n_____________GAME __________________OVER')
+
+play_again()
